@@ -9,6 +9,7 @@ Dashboard interactivo en Excel (Power Query + Power Pivot + DAX) para analizar e
 - [Contexto y Problemática de Negocio](#contexto-y-problemática-de-negocio)
 - [Preguntas de Negocio](#preguntas-de-negocio)
 - [Descripción del Dataset](#descripción-del-dataset)
+- [Proceso de Transformación](#proceso-de-transformación-power-query)
 - [Limitaciones del Dataset](#limitaciones-del-dataset)
 - [Modelo Dimensional](#modelo-dimensional)
 - [KPIs y Medidas DAX](#kpis-y-medidas-dax)
@@ -45,6 +46,49 @@ Sí, los segmentadores de Año y Market permiten explorar si estos indicadores (
 El dataset original contiene 53 columnas. El detalle completo de cada campo está documentado en [`documentation/diccionario_datos.md`](documentation/diccionario_datos.md).
 
 Fuente: [DataCo Smart Supply Chain for Big Data Analysis (Kaggle)](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis)
+
+## Proceso de Transformación (Power Query)
+
+El dataset original llega como un archivo plano de 53 columnas. Antes de construir el modelo dimensional, cada tabla pasó por un proceso de limpieza y transformación en Power Query. A continuación se detallan las decisiones clave, no solo los pasos aplicados.
+
+### Facts_Orders
+
+![Transformación Facts_Orders](screenshots/05_transformacion_facts_orders.png)
+
+- **Eliminación de columnas no útiles:** Se descartaron campos redundantes o sin variabilidad que no aportaban al análisis.
+- **Merge con Dim_Geography:** Se unió la tabla de hechos con la dimensión de geografía para obtener el `Geography_Id` (llave surrogada), en vez de repetir los campos de ubicación (Market, Región, País, Estado, Ciudad) en cada fila. Esto evita duplicar texto largo miles de veces y reduce el peso del modelo.
+- **Truncar fechas (lenguaje M):** Las columnas de fecha traían un componente de hora sin uso real para el análisis. Se truncaron a solo fecha, para que conectaran correctamente con la dimensión calendario.
+- **Cambio de tipo de datos:** Se ajustaron los tipos según configuración regional en español, para evitar errores de interpretación de decimales y fechas.
+
+### Dim_Customer, Dim_Product, Dim_Category y Dim_Department
+
+![Transformación Dim_Customer](screenshots/06_transformacion_dim_customer.png)
+![Transformación Dim_Product](screenshots/07_transformacion_dim_product.png)
+![Transformación Dim_Category](screenshots/08_transformacion_dim_category.png)
+![Transformación Dim_Department](screenshots/09_transformacion_dim_department.png)
+
+Estas 4 dimensiones siguieron el mismo patrón de transformación:
+- **Removed Other Columns:** Se conservaron solo las columnas relevantes para cada dimensión, descartando el resto del dataset plano.
+- **Removed Duplicates:** Al aislar solo los atributos de cada entidad (cliente, producto, categoría, departamento), quedaban filas repetidas, una por cada pedido asociado. Se eliminaron los duplicados para que cada dimensión tuviera una fila única por entidad, algo necesario para que las relaciones del modelo funcionen bien.
+
+**Nota de privacidad:** En `Dim_Customer` se excluyeron los campos de correo electrónico y contraseña presentes en el dataset original, por buenas prácticas de manejo de datos personales, incluso tratándose de un dataset de práctica.
+
+### Dim_Geography_Order
+
+![Transformación Dim_Geography](screenshots/10_transformacion_dim_geography.png)
+
+Esta dimensión requirió un paso adicional frente a las demás:
+- **Removed Other Columns + Removed Duplicates:** Igual que las otras dimensiones, para aislar las combinaciones únicas de Market, Región, País, Estado y Ciudad.
+- **Added Index:** Se generó una llave surrogada (`Geography_Id`) con una columna de índice, ya que la combinación de campos geográficos no tenía un identificador único propio en el dataset original. Esta llave es la que se usa en el `Merge` con `Facts_Orders`.
+- **Renamed Columns + Reordered Columns:** Ajustes finales de nombres y orden, para mantener consistencia con el resto del modelo.
+
+### Dim_Calendar
+
+A diferencia de las demás dimensiones, la tabla de calendario no viene del dataset original: se construyó completamente con código M, cubriendo tanto las fechas de pedido como las de envío, para que ambas se conectaran a una única dimensión de tiempo.
+
+![Código M de Dim_Calendar](screenshots/11_lenguajeM_dim_calendar.png)
+
+El rango de fechas se calcula automáticamente a partir de las fechas mínima y máxima presentes en `Facts_Orders`, en vez de escribir un rango fijo a mano. Así, si el dataset se actualizara con datos nuevos, la dimensión calendario se ajustaría sola, sin tener que editar el código. También se agregaron columnas de apoyo (Año, Mes, Trimestre, Año-Trimestre, Día de la Semana, Es Fin de Semana) para poder analizar estacionalidad sin tener que calcular eso en cada medida DAX por separado.
 
 ## Limitaciones del Dataset
 
