@@ -27,7 +27,7 @@ Este proyecto usa el dataset **DataCo Smart Supply Chain**, con más de 180,000 
 El dashboard fue diseñado para responder, de forma interactiva, las siguientes preguntas:
 
 **1. ¿Qué porcentaje de pedidos se entrega a tiempo, y qué tan severos son los retrasos cuando ocurren?**
-Solo el **45.2%** de los pedidos se entrega a tiempo, lo que significa que más de la mitad presenta algún grado de retraso. Sin embargo, cuando el retraso ocurre, su magnitud es leve: en promedio, ~0.6 días por encima de lo programado. Esto indica un problema de frecuencia más que de severidad.
+Solo el **45.2%** de los pedidos se entrega a tiempo, lo que significa que más de la mitad presenta algún grado de retraso. Sin embargo, cuando el retraso ocurre, su magnitud es leve: en promedio, ~0.6 días por encima de lo programado. Es decir, el problema es que ocurre muy seguido, no que los retrasos sean graves.
 
 **2. ¿El problema de retrasos depende de la región de entrega, o del modo de envío elegido?**
 No depende de la región, ya que el retraso promedio es consistente en todo el mundo. Sí depende del modo de envío: **Second Class** concentra el mayor retraso, mientras que **Standard Class** es el más confiable.
@@ -111,7 +111,7 @@ Se construyó un modelo en esquema estrella (con una porción en copo de nieve) 
 
 ## KPIs y Medidas DAX
 
-Se definieron 4 medidas DAX que funcionan como indicadores de desempeño real (no solo montos o conteos), cada una con un propósito de negocio específico:
+Se definieron 4 medidas DAX, cada una con un propósito de negocio específico:
 
 | KPI | Qué mide |
 |---|---|
@@ -141,10 +141,10 @@ El dashboard es completamente interactivo, con segmentadores de **Año** y **Mar
 
 - Con un cumplimiento de solo **45.2%** sobre un total de **65,752 pedidos**, más de la mitad de las órdenes presenta algún grado de retraso. Sin embargo, el retraso promedio general es bajo (~0.6 días), lo que indica que el problema es de **frecuencia**, no de magnitud extrema en la mayoría de los casos.
 
-- El modo de envío **Second Class** concentra un retraso promedio de **1.99 días**, más de 3 veces el promedio general del negocio (~0.6 días). Esto aísla la causa raíz del problema en un proceso específico, no en la operación logística en su conjunto, y sugiere revisar el proveedor o el proceso interno asociado a ese modo de envío como primera acción correctiva.
+- El modo de envío **Second Class** concentra un retraso promedio de **1.99 días**, más de 3 veces el promedio general del negocio (~0.6 días). Esto confirma que el problema está en ese modo de envío específico, no en toda la operación logística, y sugiere revisar el proveedor o el proceso interno asociado como primera acción correctiva.
 
-- La categoría **Fishing** lidera en ventas ($6,929,654) con un margen de aproximadamente 11%, cercano al margen general del negocio (10.8%). Esto la posiciona como una categoría estratégica tanto por volumen como por rentabilidad, y candidata a priorizar en decisiones de inventario o promoción.
+- La categoría **Fishing** lidera en ventas ($6,929,654) con un margen de aproximadamente 11%, cercano al margen general del negocio (10.8%). Por eso vale la pena priorizarla en decisiones de inventario o promoción.
 
-- El **4.3%** de los pedidos corresponde a cancelaciones o fraude sospechoso. Aunque es una proporción acotada, sobre 65,752 pedidos representa más de 2,800 órdenes con pérdida de valor, un volumen suficiente para justificar un proceso de revisión o alerta temprana en el área de operaciones.
+- El **4.3%** de los pedidos corresponde a cancelaciones o fraude sospechoso. Aunque es una proporción acotada, sobre 65,752 pedidos representa más de 2,800 órdenes con pérdida de valor, un volumen suficiente para justificar una revisión del área de operaciones.
 
 - Se recomienda dar seguimiento periódico a estos 4 KPIs, con foco inmediato en el modo de envío Second Class, ya que es el hallazgo con mayor potencial de mejora medible en el corto plazo.
