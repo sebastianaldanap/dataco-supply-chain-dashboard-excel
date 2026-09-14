@@ -99,13 +99,13 @@ El rango de fechas se calcula automáticamente a partir de las fechas mínima y 
 
 Se construyó un modelo en esquema estrella (con una porción en copo de nieve) usando Power Query para transformar el archivo plano original en una tabla de hechos y seis dimensiones:
 
-- **Facts_Orders**: tabla de hechos, a nivel de ítem de pedido (23 columnas: llaves, métricas y estados)
-- **Dim_Customer**: datos del cliente (sin correo ni contraseña, por buenas prácticas de privacidad)
-- **Dim_Product**: catálogo de productos
-- **Dim_Category**: categorías de producto (relacionada con Dim_Product)
-- **Dim_Department**: departamentos/tiendas, con su ubicación geográfica
-- **Dim_Geography_Order**: geografía de destino del pedido (Market, Región, País, Estado, Ciudad), con llave surrogate
-- **Dim_Calendar**: dimensión de fechas generada por código M, cubriendo tanto la fecha de pedido como la de envío
+- **Facts_Orders**: Tabla de hechos, a nivel de ítem de pedido (23 columnas: llaves, métricas y estados)
+- **Dim_Customer**: Datos del cliente (sin correo ni contraseña, por buenas prácticas de privacidad)
+- **Dim_Product**: Catálogo de productos
+- **Dim_Category**: Categorías de producto (relacionada con Dim_Product)
+- **Dim_Department**: Departamentos/tiendas, con su ubicación geográfica
+- **Dim_Geography_Order**: Geografía de destino del pedido (Market, Región, País, Estado, Ciudad), con llave surrogate
+- **Dim_Calendar**: Dimensión de fechas generada por código M, cubriendo tanto la fecha de pedido como la de envío
 
 ![Modelo de datos en Power Pivot](screenshots/03_modelo_power_pivot.png)
 
