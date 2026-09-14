@@ -1,53 +1,51 @@
 # Dashboard de Rendimiento Logístico — DataCo Supply Chain
 
-Dashboard interactivo en Excel (Power Query + Power Pivot + DAX) para analizar el cumplimiento de entregas de una empresa de cadena de suministro, identificar dónde falla el proceso y medir su impacto en el negocio.
-
-**Herramientas:** Excel · Power Query · Power Pivot · DAX
-
 ## Índice
 
-- [Contexto y Problemática de Negocio](#contexto-y-problemática-de-negocio)
-- [Preguntas de Negocio](#preguntas-de-negocio)
-- [Descripción del Dataset](#descripción-del-dataset)
-- [Proceso de Transformación](#proceso-de-transformación-power-query)
-- [Limitaciones del Dataset](#limitaciones-del-dataset)
-- [Modelo Dimensional](#modelo-dimensional)
-- [KPIs y Medidas DAX](#kpis-y-medidas-dax)
-- [Dashboard y Hallazgos](#dashboard-y-hallazgos)
-- [Conclusiones y Recomendaciones](#conclusiones-y-recomendaciones)
+1. [Descripción del Proyecto](#1-descripción-del-proyecto)
+2. [Objetivos](#2-objetivos)
+3. [Tecnologías Utilizadas](#3-tecnologías-utilizadas)
+4. [Dataset Utilizado](#4-dataset-utilizado)
+5. [Proceso de Transformación](#5-proceso-de-transformación-power-query)
+6. [Modelo Dimensional](#6-modelo-dimensional)
+7. [Preguntas de Negocio](#7-preguntas-de-negocio)
+8. [KPIs y Medidas DAX](#8-kpis-y-medidas-dax)
+9. [Dashboard y Hallazgos](#9-dashboard-y-hallazgos)
+10. [Conclusiones y Recomendaciones](#10-conclusiones-y-recomendaciones)
 
-## Contexto y Problemática de Negocio
+## 1. Descripción del Proyecto
 
-Este proyecto usa el dataset **DataCo Smart Supply Chain**, con más de 180,000 pedidos de una empresa de cadena de suministro que opera a nivel global. El objetivo fue construir un dashboard que responda una pregunta central:
+Dashboard interactivo en Excel (Power Query + Power Pivot + DAX) para analizar el cumplimiento de entregas de una empresa de cadena de suministro, identificar dónde falla el proceso y medir su impacto en el negocio.
 
-> **¿La empresa está cumpliendo sus compromisos de entrega, dónde está fallando y qué impacto tiene eso en el negocio?**
+## 2. Objetivos
 
-## Preguntas de Negocio
+**Objetivo General:**
+Analizar el cumplimiento de entregas, la rentabilidad por categoría y el riesgo operativo de DataCo Supply Chain mediante un dashboard interactivo en Excel, para identificar dónde falla el proceso logístico y qué impacto tiene en el negocio.
 
-El dashboard fue diseñado para responder, de forma interactiva, las siguientes preguntas:
+**Objetivos Específicos:**
+- Medir el porcentaje de pedidos entregados a tiempo y la severidad de los retrasos.
+- Determinar si el retraso depende de la región de entrega o del modo de envío.
+- Comparar ventas y margen por categoría de producto.
+- Cuantificar la proporción de pedidos cancelados o con fraude sospechoso.
+- Permitir explorar estos indicadores por año y mercado mediante segmentadores.
 
-**1. ¿Qué porcentaje de pedidos se entrega a tiempo, y qué tan severos son los retrasos cuando ocurren?**
-Solo el **45.2%** de los pedidos se entrega a tiempo, lo que significa que más de la mitad presenta algún grado de retraso. Sin embargo, cuando el retraso ocurre, su magnitud es leve: en promedio, ~0.6 días por encima de lo programado. Es decir, el problema es que ocurre muy seguido, no que los retrasos sean graves.
+## 3. Tecnologías Utilizadas
+- Excel
+- Power Query
+- Power Pivot
+- DAX
 
-**2. ¿El problema de retrasos depende de la región de entrega, o del modo de envío elegido?**
-No depende de la región, ya que el retraso promedio es consistente en todo el mundo. Sí depende del modo de envío: **Second Class** concentra el mayor retraso, mientras que **Standard Class** es el más confiable.
-
-**3. ¿Qué categorías de producto generan más ventas, y cuáles realmente dejan más margen?**
-**Fishing** es la categoría con mayor volumen de ventas, con **$6,929,654** en ventas totales y **$756,221** en beneficio, lo que representa un margen de aproximadamente 11% sobre esa categoría, cercano al margen general del negocio.
-
-**4. ¿Qué proporción de pedidos se pierde por cancelación o fraude sospechoso?**
-El **4.3%** de los pedidos corresponde a cancelaciones o casos de fraude sospechoso, una pérdida operativa acotada pero medible dentro del total de la operación.
-
-**5. ¿Estos patrones cambian según el año o el mercado de destino?**
-Sí, los segmentadores de Año y Market permiten explorar si estos indicadores (45.2% de cumplimiento, 10.8% de margen, 4.3% de riesgo) se mantienen o varían al aislar un periodo o una región específica.
-
-## Descripción del Dataset
+## 4. Dataset Utilizado
 
 El dataset original contiene 53 columnas. El detalle completo de cada campo está documentado en [`documentation/diccionario_datos.md`](documentation/diccionario_datos.md).
 
 Fuente: [DataCo Smart Supply Chain for Big Data Analysis (Kaggle)](https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis)
 
-## Proceso de Transformación (Power Query)
+**Limitaciones del dataset:**
+- El dataset cubre pedidos desde 2015 hasta enero de 2018, por lo que el análisis por año debe interpretarse considerando que 2018 solo tiene un mes de datos disponibles.
+- Se identificó una columna (`Order Zipcode`) presente en la fuente original pero no documentada en el diccionario oficial de Kaggle; se mantuvo fuera del modelo por consistencia con la fuente.
+
+## 5. Proceso de Transformación (Power Query)
 
 El dataset original llega como un archivo plano de 53 columnas. Antes de construir el modelo dimensional, cada tabla pasó por un proceso de limpieza y transformación en Power Query. A continuación se detallan las decisiones clave, no solo los pasos aplicados.
 
@@ -90,12 +88,7 @@ A diferencia de las demás dimensiones, la tabla de calendario no viene del data
 
 El rango de fechas se calcula automáticamente a partir de las fechas mínima y máxima presentes en `Facts_Orders`, en vez de escribir un rango fijo a mano. Así, si el dataset se actualizara con datos nuevos, la dimensión calendario se ajustaría sola, sin tener que editar el código. También se agregaron columnas de apoyo (Año, Mes, Trimestre, Año-Trimestre, Día de la Semana, Es Fin de Semana) para poder analizar estacionalidad sin tener que calcular eso en cada medida DAX por separado.
 
-## Limitaciones del Dataset
-
-- El dataset cubre pedidos desde 2015 hasta enero de 2018, por lo que el análisis por año debe interpretarse considerando que 2018 solo tiene un mes de datos disponibles.
-- Se identificó una columna (`Order Zipcode`) presente en la fuente original pero no documentada en el diccionario oficial de Kaggle; se mantuvo fuera del modelo por consistencia con la fuente.
-
-## Modelo Dimensional
+## 6. Modelo Dimensional
 
 Se construyó un modelo en esquema estrella (con una porción en copo de nieve) usando Power Query para transformar el archivo plano original en una tabla de hechos y seis dimensiones:
 
@@ -109,7 +102,26 @@ Se construyó un modelo en esquema estrella (con una porción en copo de nieve) 
 
 ![Modelo de datos en Power Pivot](screenshots/03_modelo_power_pivot.png)
 
-## KPIs y Medidas DAX
+## 7. Preguntas de Negocio
+
+El dashboard fue diseñado para responder, de forma interactiva, las siguientes preguntas:
+
+**1. ¿Qué porcentaje de pedidos se entrega a tiempo, y qué tan severos son los retrasos cuando ocurren?**
+Solo el **45.2%** de los pedidos se entrega a tiempo, lo que significa que más de la mitad presenta algún grado de retraso. Sin embargo, cuando el retraso ocurre, su magnitud es leve: en promedio, ~0.6 días por encima de lo programado. Es decir, el problema es que ocurre muy seguido, no que los retrasos sean graves.
+
+**2. ¿El problema de retrasos depende de la región de entrega, o del modo de envío elegido?**
+No depende de la región, ya que el retraso promedio es consistente en todo el mundo. Sí depende del modo de envío: **Second Class** concentra el mayor retraso, mientras que **Standard Class** es el más confiable.
+
+**3. ¿Qué categorías de producto generan más ventas, y cuáles realmente dejan más margen?**
+**Fishing** es la categoría con mayor volumen de ventas, con **$6,929,654** en ventas totales y **$756,221** en beneficio, lo que representa un margen de aproximadamente 11% sobre esa categoría, cercano al margen general del negocio.
+
+**4. ¿Qué proporción de pedidos se pierde por cancelación o fraude sospechoso?**
+El **4.3%** de los pedidos corresponde a cancelaciones o casos de fraude sospechoso, una pérdida operativa acotada pero medible dentro del total de la operación.
+
+**5. ¿Estos patrones cambian según el año o el mercado de destino?**
+Sí, los segmentadores de Año y Market permiten explorar si estos indicadores (45.2% de cumplimiento, 10.8% de margen, 4.3% de riesgo) se mantienen o varían al aislar un periodo o una región específica.
+
+## 8. KPIs y Medidas DAX
 
 Se definieron 4 medidas DAX, cada una con un propósito de negocio específico:
 
@@ -125,7 +137,7 @@ Se definieron 4 medidas DAX, cada una con un propósito de negocio específico:
 ![Medida Margen de Rentabilidad](screenshots/04c_medidas_dax.png)
 ![Medida % Pedidos en Riesgo](screenshots/04d_medidas_dax.png)
 
-## Dashboard y Hallazgos
+## 9. Dashboard y Hallazgos
 
 El dashboard es completamente interactivo, con segmentadores de **Año** y **Market** que actualizan en tiempo real los 4 KPIs y los 3 gráficos.
 
@@ -137,7 +149,7 @@ El dashboard es completamente interactivo, con segmentadores de **Año** y **Mar
 
 **Hallazgo 3: La rentabilidad varía significativamente por categoría de producto.** Comparar ventas y beneficio lado a lado permite identificar qué categorías realmente aportan margen, más allá del volumen que mueven.
 
-## Conclusiones y Recomendaciones
+## 10. Conclusiones y Recomendaciones
 
 - Con un cumplimiento de solo **45.2%** sobre un total de **65,752 pedidos**, más de la mitad de las órdenes presenta algún grado de retraso. Sin embargo, el retraso promedio general es bajo (~0.6 días), lo que indica que el problema es de **frecuencia**, no de magnitud extrema en la mayoría de los casos.
 
