@@ -15,7 +15,7 @@
 
 ## 1. Descripción del Proyecto
 
-Dashboard interactivo en Excel (Power Query + Power Pivot + DAX) para analizar el cumplimiento de entregas de una empresa de cadena de suministro, identificar dónde falla el proceso y medir su impacto en el negocio.
+Proyecto de análisis de datos desarrollado en Excel (Power Query, Power Pivot y DAX) sobre más de 180,000 pedidos de DataCo, una empresa de cadena de suministro global, con foco en evaluar el cumplimiento de entregas, identificar la causa raíz de los retrasos y medir su impacto en la rentabilidad del negocio. Desarrollado como proyecto final del curso "Excel for Data Analyst" (Data Academy Latam).
 
 ## 2. Objetivos
 
