@@ -134,7 +134,7 @@ Se definieron 4 medidas DAX, cada una con un propósito de negocio específico:
 | **Margen de Rentabilidad (%)** | Impacto financiero de la operación |
 | **% Pedidos en Riesgo** | Proporción de pedidos cancelados o con fraude sospechoso |
 
-> **Nota:** los porcentajes se calculan sobre líneas de pedido (cada fila de `Facts_Orders`), no sobre pedidos únicos.
+> **Nota:** % Entregas a Tiempo y % Pedidos en Riesgo se calculan sobre líneas de pedido (cada fila de `Facts_Orders`), no sobre pedidos únicos.
 
 ![Medida % Entregas a Tiempo](screenshots/04a_medidas_dax.png)
 ![Medida Retraso Promedio](screenshots/04b_medidas_dax.png)
